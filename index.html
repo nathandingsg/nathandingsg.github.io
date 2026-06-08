@@ -28,14 +28,29 @@
 
 <!-- ===================== HERO ===================== -->
 <header class="hero" id="top">
-  <div class="wrap">
-    <div class="eyebrow reveal d1">Student Researcher &middot; Singapore</div>
-    <h1 class="reveal d2">I study how migration reshapes economies &mdash; and the <em>families</em> inside them.</h1>
-    <p class="lead reveal d3">
-      Most of the world's attention to migration stops at the border. I'm more
-      interested in what happens at the kitchen table &mdash; the household that sends
-      someone away, and the economy quietly built on their absence.
-    </p>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow reveal d1">Student Researcher &middot; Singapore</div>
+      <h1 class="reveal d2">I study how migration reshapes economies &mdash; and the <em>families</em> inside them.</h1>
+      <p class="lead reveal d3">
+        Most of the world's attention to migration stops at the border. I'm more
+        interested in what happens at the kitchen table &mdash; the household that sends
+        someone away, and the economy quietly built on their absence.
+      </p>
+    </div>
+
+    <!-- ROTATING SLIDESHOW. To add/remove a photo: add or delete an <img> line.
+         The first image needs class="is-active"; the script handles the rest.
+         EDIT the alt="" text to accurately describe each photo. -->
+    <div class="slideshow reveal d3" id="slideshow" role="group" aria-label="Photos from fieldwork and community work">
+      <img src="images/photo-3.jpg" class="is-active" alt="Nathan with two young children outside a home during fieldwork in the Philippines">
+      <img src="images/photo-1.jpg" alt="Nathan presenting at an ICM Students Singapore session">
+      <img src="images/photo-4.jpg" alt="Nathan sitting with community members during fieldwork">
+      <img src="images/photo-6.jpg" alt="A gathering with community members and donated supplies">
+      <img src="images/photo-5.jpg" alt="Nathan and a community member at a build site">
+      <img src="images/photo-2.jpg" alt="The ICM Students Singapore team after a session">
+      <div class="slide-dots" id="slideDots"></div>
+    </div>
   </div>
 </header>
 
@@ -186,6 +201,37 @@
   </div>
 </footer>
 
-<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ----- Hero slideshow -----
+  (function(){
+    var show = document.getElementById('slideshow');
+    if(!show) return;
+    var imgs = [].slice.call(show.querySelectorAll('img'));
+    var dotsWrap = document.getElementById('slideDots');
+    var i = 0, timer = null;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    imgs.forEach(function(_, idx){
+      var b = document.createElement('button');
+      b.setAttribute('aria-label', 'Show photo ' + (idx + 1));
+      if(idx === 0) b.className = 'is-active';
+      b.addEventListener('click', function(){ go(idx); restart(); });
+      dotsWrap.appendChild(b);
+    });
+    var dots = [].slice.call(dotsWrap.children);
+
+    function go(n){
+      imgs[i].classList.remove('is-active'); dots[i].classList.remove('is-active');
+      i = n;
+      imgs[i].classList.add('is-active'); dots[i].classList.add('is-active');
+    }
+    function next(){ go((i + 1) % imgs.length); }
+    function start(){ if(!reduce) timer = setInterval(next, 4500); }
+    function restart(){ clearInterval(timer); start(); }
+    start();
+  })();
+</script>
 </body>
 </html>
